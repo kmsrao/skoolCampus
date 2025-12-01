@@ -1,0 +1,120 @@
+/* Global Styles */
+@import 'primeng/resources/themes/lara-light-blue/theme.css';
+@import 'primeng/resources/primeng.css';
+@import 'primeicons/primeicons.css';
+
+/* ChatGPT-like Color Palette */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f7f7f8;
+  --bg-tertiary: #ececf1;
+  --sidebar-bg: #202123;
+  --sidebar-hover: #2a2b32;
+  --text-primary: #353740;
+  --text-secondary: #6e6e80;
+  --text-inverse: #ffffff;
+  --border-color: #e5e5e5;
+  --accent-color: #10a37f;
+  --accent-hover: #0d8c6d;
+  --danger-color: #ef4444;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+/* Utility Classes */
+.w-full {
+  width: 100%;
+}
+
+.mb-3 {
+  margin-bottom: 1rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Custom PrimeNG Overrides for ChatGPT theme */
+.p-component {
+  font-family: inherit;
+}
+
+.p-card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  border-radius: 8px;
+
+  .p-card-body {
+    padding: 1.5rem;
+  }
+
+  .p-card-title {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 1.125rem;
+  }
+}
+
+.p-button {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+  }
+
+  &.p-button-secondary {
+    background: var(--bg-tertiary);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+
+    &:hover:not(:disabled) {
+      background: #d5d5db;
+      border-color: var(--border-color);
+    }
+  }
+}
+
+.p-inputtext {
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 0.625rem 0.75rem;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+
+  &:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(16, 163, 127, 0.1);
+  }
+}
+
+/* Toast Notifications Position */
+.p-toast {
+  z-index: 9999;
+
+  .p-toast-message {
+    border-radius: 8px;
+    box-shadow: var(--shadow-lg);
+  }
+}

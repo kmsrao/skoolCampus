@@ -1,0 +1,108 @@
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--bg-secondary);
+  padding: 1rem;
+}
+
+.login-wrapper {
+  width: 100%;
+  max-width: 400px;
+
+  ::ng-deep .p-card {
+    box-shadow: var(--shadow-md);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+  }
+}
+
+.login-header {
+  text-align: center;
+  padding: 2rem 1rem 1rem;
+
+  h2 {
+    margin: 0 0 0.5rem;
+    color: #333;
+    font-size: 1.75rem;
+    font-weight: 600;
+  }
+
+  p {
+    margin: 0;
+    color: #666;
+    font-size: 0.95rem;
+  }
+}
+
+.field {
+  margin-bottom: 1.5rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+
+  small.p-error {
+    display: block;
+    margin-top: 0.25rem;
+    color: #e24c4c;
+    font-size: 0.875rem;
+  }
+}
+
+.forgot-password-link {
+  text-align: right;
+  margin-bottom: 1.5rem;
+
+  a {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+
+    &:hover {
+      color: var(--accent-hover);
+      text-decoration: underline;
+    }
+  }
+}
+
+.login-footer {
+  text-align: center;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+
+  p {
+    margin: 0;
+    color: #666;
+    font-size: 0.85rem;
+  }
+}
+
+::ng-deep {
+  .p-password {
+    width: 100%;
+
+    .p-password-input {
+      width: 100%;
+    }
+  }
+
+  .p-button {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .ng-invalid.ng-touched {
+    .p-inputtext,
+    .p-password-input {
+      border-color: #e24c4c;
+    }
+  }
+}

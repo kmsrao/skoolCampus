@@ -1,0 +1,85 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# Compiled output
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# Node modules
+node_modules/
+nestjs-backend/node_modules/
+angular-frontend/node_modules/
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# Misc
+/.angular/cache
+.sass-cache/
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.local
+.env.*.local
+nestjs-backend/.env
+!nestjs-backend/.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+backend.log
+frontend.log
+
+# Process IDs
+*.pid
+.backend.pid
+.frontend.pid
+
+# Build outputs
+nestjs-backend/dist/
+angular-frontend/dist/
+
+# Prisma
+nestjs-backend/prisma/migrations/
+!nestjs-backend/prisma/schema.prisma
+
+# Uploads
+uploads/
+nestjs-backend/uploads/
+
+# Testing
+/coverage
+*.spec.ts.snap
+
+# Cache
+.eslintcache
+.npm
+.yarn
+
+# Production
+/build

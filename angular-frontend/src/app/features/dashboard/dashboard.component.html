@@ -1,0 +1,190 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1>Welcome back, {{ currentUser()?.name }}!</h1>
+        <p class="subtitle">Here's what's happening today</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin/Staff Dashboard -->
+  @if (isAdminDashboard() && dashboardData()) {
+    <div class="dashboard-content">
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <p-card styleClass="stat-card">
+          <div class="stat-content">
+            <div class="stat-icon students">
+              <i class="pi pi-users"></i>
+            </div>
+            <div class="stat-details">
+              <h3>{{ dashboardData()?.counts?.totalStudents || 0 }}</h3>
+              <p>Total Students</p>
+            </div>
+          </div>
+        </p-card>
+
+        <p-card styleClass="stat-card">
+          <div class="stat-content">
+            <div class="stat-icon staff">
+              <i class="pi pi-id-card"></i>
+            </div>
+            <div class="stat-details">
+              <h3>{{ dashboardData()?.counts?.totalStaff || 0 }}</h3>
+              <p>Total Staff</p>
+            </div>
+          </div>
+        </p-card>
+
+        <p-card styleClass="stat-card">
+          <div class="stat-content">
+            <div class="stat-icon admissions">
+              <i class="pi pi-user-plus"></i>
+            </div>
+            <div class="stat-details">
+              <h3>{{ dashboardData()?.counts?.monthlyAdmissions || 0 }}</h3>
+              <p>Monthly Admissions</p>
+            </div>
+          </div>
+        </p-card>
+
+        <p-card styleClass="stat-card">
+          <div class="stat-content">
+            <div class="stat-icon vouchers">
+              <i class="pi pi-ticket"></i>
+            </div>
+            <div class="stat-details">
+              <h3>{{ dashboardData()?.counts?.totalVouchers || 0 }}</h3>
+              <p>Monthly Vouchers</p>
+            </div>
+          </div>
+        </p-card>
+      </div>
+
+      <!-- Charts -->
+      <div class="charts-grid">
+        <!-- Student by Class -->
+        @if (dashboardData()?.charts?.studentByClass && (dashboardData()!.charts!.studentByClass.length || 0) > 0) {
+          <p-card header="Students by Class">
+            <p-chart
+              type="pie"
+              [data]="getStudentByClassChartData()"
+              [options]="pieChartOptions"
+              [style]="{ height: '300px' }"
+            ></p-chart>
+          </p-card>
+        }
+
+        <!-- Income vs Expense -->
+        @if (dashboardData()?.charts?.incomeVsExpense) {
+          <p-card header="Monthly Income vs Expense">
+            <p-chart
+              type="doughnut"
+              [data]="getIncomeVsExpenseChartData()"
+              [options]="pieChartOptions"
+              [style]="{ height: '300px' }"
+            ></p-chart>
+          </p-card>
+        }
+
+        <!-- Weekend Attendance -->
+        @if (dashboardData()?.charts?.weekendAttendance) {
+          <p-card header="Last 7 Days Attendance" styleClass="chart-card-full">
+            <p-chart
+              type="line"
+              [data]="getWeekendAttendanceChartData()"
+              [options]="lineChartOptions"
+              [style]="{ height: '300px' }"
+            ></p-chart>
+          </p-card>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Student Dashboard -->
+  @if (isStudentDashboard() && dashboardData()) {
+    <div class="dashboard-content">
+      <div class="student-info-grid">
+        <p-card header="Enrollment Information">
+          @if (dashboardData()?.enrollment) {
+            <div class="info-row">
+              <span class="label">Class:</span>
+              <span class="value">{{ dashboardData()?.enrollment?.class?.name }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Section:</span>
+              <span class="value">{{ dashboardData()?.enrollment?.section?.name }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Roll No:</span>
+              <span class="value">{{ dashboardData()?.enrollment?.rollNo }}</span>
+            </div>
+          } @else {
+            <p>No active enrollment found.</p>
+          }
+        </p-card>
+
+        <p-card header="Attendance Summary">
+          @if (dashboardData()?.attendanceSummary) {
+            <div class="attendance-stats">
+              <div class="attendance-item present">
+                <i class="pi pi-check-circle"></i>
+                <span>{{ dashboardData()?.attendanceSummary?.present || 0 }} Present</span>
+              </div>
+              <div class="attendance-item absent">
+                <i class="pi pi-times-circle"></i>
+                <span>{{ dashboardData()?.attendanceSummary?.absent || 0 }} Absent</span>
+              </div>
+              <div class="attendance-item late">
+                <i class="pi pi-clock"></i>
+                <span>{{ dashboardData()?.attendanceSummary?.late || 0 }} Late</span>
+              </div>
+            </div>
+          }
+        </p-card>
+      </div>
+    </div>
+  }
+
+  <!-- Parent Dashboard -->
+  @if (isParentDashboard() && dashboardData()) {
+    <div class="dashboard-content">
+      <p-card header="My Children">
+        @if (dashboardData()?.children && dashboardData()?.children!.length > 0) {
+          <p-table [value]="dashboardData()?.children!">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Name</th>
+                <th>Class</th>
+                <th>Section</th>
+                <th>Roll No</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-student>
+              <tr>
+                <td>{{ student.firstName }} {{ student.lastName }}</td>
+                <td>{{ student.enrolls[0]?.class?.name }}</td>
+                <td>{{ student.enrolls[0]?.section?.name }}</td>
+                <td>{{ student.enrolls[0]?.rollNo }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        } @else {
+          <p>No children found.</p>
+        }
+      </p-card>
+    </div>
+  }
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="loading-container">
+      <p-skeleton height="150px" styleClass="mb-3"></p-skeleton>
+      <p-skeleton height="300px" styleClass="mb-3"></p-skeleton>
+      <p-skeleton height="300px"></p-skeleton>
+    </div>
+  }
+</div>

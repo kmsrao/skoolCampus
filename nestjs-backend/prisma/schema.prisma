@@ -1,0 +1,379 @@
+// This is your Prisma schema file for SkoolCampus
+// Based on existing CodeIgniter database structure
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Authentication & User Management
+model LoginCredential {
+  id         Int       @id @default(autoincrement())
+  username   String    @unique @db.VarChar(255)
+  password   String    @db.VarChar(255)
+  role       Int       // 1=Superadmin, 2=Admin, 3=Teacher, 4=Accountant, 5=Librarian, 6=Parent, 7=Student
+  userId     Int       @map("user_id")
+  active     Int       @default(1) @db.SmallInt // 1=Active, 0=Inactive
+  lastLogin  DateTime? @map("last_login") @db.Timestamp
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp
+  updatedAt  DateTime  @updatedAt @map("updated_at") @db.Timestamp
+
+  // Relations
+  resetPasswords ResetPassword[]
+
+  @@map("login_credential")
+}
+
+model LoginLog {
+  id               Int            @id @default(autoincrement())
+  userId           Int            @map("user_id")
+  role             Int
+  ip               String         @db.VarChar(45)
+  platform         String         @db.VarChar(100)
+  browser          String         @db.VarChar(100)
+  timestamp        DateTime       @db.Timestamp
+  branchId         Int            @map("branch_id")
+
+  branch           Branch          @relation(fields: [branchId], references: [id])
+
+  @@map("login_log")
+}
+
+model ResetPassword {
+  id                  Int             @id @default(autoincrement())
+  key                 String          @unique @db.VarChar(255)
+  loginCredentialId   Int             @map("login_credential_id")
+  username            String          @db.VarChar(255)
+  createdAt           DateTime        @default(now()) @map("created_at") @db.Timestamp
+
+  loginCredential     LoginCredential @relation(fields: [loginCredentialId], references: [id], onDelete: Cascade)
+
+  @@map("reset_password")
+}
+
+// Branch/School Management
+model Branch {
+  id              Int      @id @default(autoincrement())
+  schoolName      String   @map("school_name") @db.VarChar(255)
+  address         String?  @db.Text
+  mobileno        String?  @db.VarChar(20)
+  email           String?  @db.VarChar(255)
+  status          Int      @default(1) @db.SmallInt
+  translation     String?  @db.VarChar(50)
+  studentLogin    Int      @default(1) @map("student_login") @db.SmallInt
+  parentLogin     Int      @default(1) @map("parent_login") @db.SmallInt
+  facebookUrl     String?  @map("facebook_url") @db.VarChar(255)
+  twitterUrl      String?  @map("twitter_url") @db.VarChar(255)
+  linkedinUrl     String?  @map("linkedin_url") @db.VarChar(255)
+  youtubeUrl      String?  @map("youtube_url") @db.VarChar(255)
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamp
+  updatedAt       DateTime @updatedAt @map("updated_at") @db.Timestamp
+
+  // Relations
+  students          Student[]
+  staff             Staff[]
+  parents           Parent[]
+  classes           Class[]
+  enrolls           Enroll[]
+  loginLogs         LoginLog[]
+  studentAttendance StudentAttendance[]
+  staffAttendance   StaffAttendance[]
+  transactions      Transaction[]
+  feeAllocations    FeeAllocation[]
+
+  @@map("branch")
+}
+
+// Global Settings
+model GlobalSettings {
+  id                 Int      @id @default(autoincrement())
+  schoolName         String   @map("school_name") @db.VarChar(255)
+  address            String?  @db.Text
+  mobileno           String?  @db.VarChar(20)
+  email              String?  @db.VarChar(255)
+  translation        String   @default("english") @db.VarChar(50)
+  sessionId          Int      @map("session_id")
+  timezone           String   @default("Asia/Dhaka") @db.VarChar(100)
+  currency           String   @default("USD") @db.VarChar(10)
+  currencySymbol     String   @default("$") @map("currency_symbol") @db.VarChar(10)
+  updatedAt          DateTime @updatedAt @map("updated_at") @db.Timestamp
+
+  @@map("global_settings")
+}
+
+// Student Management
+model Student {
+  id                 Int       @id @default(autoincrement())
+  registerNo         String    @unique @map("register_no") @db.VarChar(50)
+  admissionDate      DateTime? @map("admission_date") @db.Date
+  firstName          String    @map("first_name") @db.VarChar(100)
+  lastName           String    @map("last_name") @db.VarChar(100)
+  gender             String    @db.VarChar(10)
+  birthday           DateTime? @db.Date
+  religion           String?   @db.VarChar(50)
+  caste              String?   @db.VarChar(50)
+  bloodGroup         String?   @map("blood_group") @db.VarChar(10)
+  motherTongue       String?   @map("mother_tongue") @db.VarChar(50)
+  currentAddress     String?   @map("current_address") @db.Text
+  permanentAddress   String?   @map("permanent_address") @db.Text
+  city               String?   @db.VarChar(100)
+  state              String?   @db.VarChar(100)
+  mobileno           String?   @db.VarChar(20)
+  email              String?   @db.VarChar(255)
+  parentId           Int       @map("parent_id")
+  categoryId         Int       @default(0) @map("category_id")
+  routeId            Int       @default(0) @map("route_id")
+  vehicleId          Int       @default(0) @map("vehicle_id")
+  hostelId           Int       @default(0) @map("hostel_id")
+  roomId             Int       @default(0) @map("room_id")
+  photo              String?   @db.VarChar(255)
+  previousDetails    String?   @map("previous_details") @db.Text
+  branchId           Int       @map("branch_id")
+  createdAt          DateTime  @default(now()) @map("created_at") @db.Timestamp
+  updatedAt          DateTime  @updatedAt @map("updated_at") @db.Timestamp
+
+  // Relations
+  branch             Branch              @relation(fields: [branchId], references: [id])
+  parent             Parent              @relation(fields: [parentId], references: [id])
+  enrolls            Enroll[]
+  feeAllocations     FeeAllocation[]
+
+  @@map("student")
+}
+
+// Parent Management
+model Parent {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(255)
+  relation    String?  @db.VarChar(50)
+  fatherName  String?  @map("father_name") @db.VarChar(255)
+  motherName  String?  @map("mother_name") @db.VarChar(255)
+  occupation  String?  @db.VarChar(100)
+  income      String?  @db.VarChar(50)
+  education   String?  @db.VarChar(100)
+  email       String?  @db.VarChar(255)
+  mobileno    String?  @db.VarChar(20)
+  address     String?  @db.Text
+  city        String?  @db.VarChar(100)
+  state       String?  @db.VarChar(100)
+  photo       String?  @db.VarChar(255)
+  branchId    Int      @map("branch_id")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamp
+
+  // Relations
+  branch      Branch    @relation(fields: [branchId], references: [id])
+  students    Student[]
+
+  @@map("parent")
+}
+
+// Staff Management
+model Staff {
+  id              Int       @id @default(autoincrement())
+  name            String    @db.VarChar(255)
+  staffId         String?   @unique @map("staff_id") @db.VarChar(50)
+  gender          String    @db.VarChar(10)
+  birthday        DateTime? @db.Date
+  religion        String?   @db.VarChar(50)
+  bloodGroup      String?   @map("blood_group") @db.VarChar(10)
+  qualification   String?   @db.VarChar(255)
+  address         String?   @db.Text
+  phone           String?   @db.VarChar(20)
+  email           String?   @db.VarChar(255)
+  photo           String?   @db.VarChar(255)
+  joiningDate     DateTime? @map("joining_date") @db.Date
+  designation     String?   @db.VarChar(100)
+  branchId        Int       @map("branch_id")
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp
+  updatedAt       DateTime  @updatedAt @map("updated_at") @db.Timestamp
+
+  // Relations
+  branch          Branch            @relation(fields: [branchId], references: [id])
+  staffAttendance StaffAttendance[]
+
+  @@map("staff")
+}
+
+// Class Management
+model Class {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(255)
+  nameNumeric String?  @map("name_numeric") @db.VarChar(50)
+  teacherId   Int      @default(0) @map("teacher_id")
+  branchId    Int      @map("branch_id")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamp
+
+  // Relations
+  branch      Branch   @relation(fields: [branchId], references: [id])
+  enrolls     Enroll[]
+
+  @@map("class")
+}
+
+// Section Management (if exists in your DB)
+model Section {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(255)
+  classId   Int      @map("class_id")
+  capacity  Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamp
+
+  // Relations
+  enrolls   Enroll[]
+
+  @@map("section")
+}
+
+// Academic Session
+model Session {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(255)
+  startDate DateTime @map("start_date") @db.Date
+  endDate   DateTime @map("end_date") @db.Date
+  active    Int      @default(1) @db.SmallInt
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamp
+
+  // Relations
+  enrolls   Enroll[]
+
+  @@map("session")
+}
+
+// Student Enrollment
+model Enroll {
+  id        Int      @id @default(autoincrement())
+  studentId Int      @map("student_id")
+  classId   Int      @map("class_id")
+  sectionId Int      @map("section_id")
+  sessionId Int      @map("session_id")
+  branchId  Int      @map("branch_id")
+  rollNo    String?  @map("roll_no") @db.VarChar(50)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamp
+
+  // Relations
+  student           Student             @relation(fields: [studentId], references: [id])
+  class             Class               @relation(fields: [classId], references: [id])
+  section           Section             @relation(fields: [sectionId], references: [id])
+  session           Session             @relation(fields: [sessionId], references: [id])
+  branch            Branch              @relation(fields: [branchId], references: [id])
+  studentAttendance StudentAttendance[]
+
+  @@map("enroll")
+}
+
+// Attendance Management
+model StudentAttendance {
+  id        Int      @id @default(autoincrement())
+  enrollId  Int      @map("enroll_id")
+  date      DateTime @db.Date
+  status    String   @db.VarChar(2) // P=Present, A=Absent, L=Late, H=Holiday
+  remark    String?  @db.Text
+  branchId  Int      @map("branch_id")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp
+
+  // Relations
+  enroll    Enroll   @relation(fields: [enrollId], references: [id])
+  branch    Branch   @relation(fields: [branchId], references: [id])
+
+  @@map("student_attendance")
+}
+
+model StaffAttendance {
+  id        Int      @id @default(autoincrement())
+  staffId   Int      @map("staff_id")
+  date      DateTime @db.Date
+  status    String   @db.VarChar(2) // P=Present, A=Absent, L=Late, H=Holiday
+  remark    String?  @db.Text
+  branchId  Int      @map("branch_id")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp
+
+  // Relations
+  staff     Staff    @relation(fields: [staffId], references: [id])
+  branch    Branch   @relation(fields: [branchId], references: [id])
+
+  @@map("staff_attendance")
+}
+
+// Fee Management
+model FeeAllocation {
+  id         Int      @id @default(autoincrement())
+  studentId  Int      @map("student_id")
+  groupId    Int      @map("group_id")
+  sessionId  Int      @map("session_id")
+  branchId   Int      @map("branch_id")
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamp
+
+  // Relations
+  student    Student             @relation(fields: [studentId], references: [id])
+  branch     Branch              @relation(fields: [branchId], references: [id])
+  payments   FeePaymentHistory[]
+
+  @@map("fee_allocation")
+}
+
+model FeeGroup {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(255)
+  branchId  Int      @map("branch_id")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp
+
+  // Relations
+  details   FeeGroupDetails[]
+
+  @@map("fee_groups")
+}
+
+model FeeGroupDetails {
+  id          Int      @id @default(autoincrement())
+  feeGroupsId Int      @map("fee_groups_id")
+  feeTypeId   Int      @map("fee_type_id")
+  amount      Decimal  @db.Decimal(10, 2)
+  dueDate     DateTime @map("due_date") @db.Date
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp
+
+  // Relations
+  feeGroup    FeeGroup @relation(fields: [feeGroupsId], references: [id])
+
+  @@map("fee_groups_details")
+}
+
+model FeePaymentHistory {
+  id           Int      @id @default(autoincrement())
+  allocationId Int      @map("allocation_id")
+  typeId       Int      @map("type_id")
+  amount       Decimal  @db.Decimal(10, 2)
+  discount     Decimal  @default(0) @db.Decimal(10, 2)
+  date         DateTime @db.Date
+  remarks      String?  @db.Text
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp
+
+  // Relations
+  allocation   FeeAllocation @relation(fields: [allocationId], references: [id])
+
+  @@map("fee_payment_history")
+}
+
+// Accounting/Transactions
+model Transaction {
+  id          Int      @id @default(autoincrement())
+  dr          Decimal  @default(0) @db.Decimal(10, 2)
+  cr          Decimal  @default(0) @db.Decimal(10, 2)
+  date        DateTime @db.Date
+  description String?  @db.Text
+  branchId    Int      @map("branch_id")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp
+
+  // Relations
+  branch      Branch   @relation(fields: [branchId], references: [id])
+
+  @@map("transactions")
+}
