@@ -29,13 +29,13 @@ function checkNodeModules(dir) {
 }
 
 function checkEnvFile() {
-  const envPath = path.join('nestjs-backend', '.env');
+  const envPath = path.join('backend', '.env');
   if (!fs.existsSync(envPath)) {
-    const envExamplePath = path.join('nestjs-backend', '.env.example');
+    const envExamplePath = path.join('backend', '.env.example');
     if (fs.existsSync(envExamplePath)) {
       fs.copyFileSync(envExamplePath, envPath);
       log('⚠️  Created .env file from .env.example', colors.yellow);
-      log('⚠️  Please edit nestjs-backend/.env with your database credentials!', colors.yellow);
+      log('⚠️  Please edit backend/.env with your database credentials!', colors.yellow);
       log('', colors.reset);
     }
   }
@@ -72,16 +72,16 @@ async function main() {
 
   try {
     // Check if dependencies are installed
-    const backendHasModules = checkNodeModules('nestjs-backend');
-    const frontendHasModules = checkNodeModules('angular-frontend');
+    const backendHasModules = checkNodeModules('backend');
+    const frontendHasModules = checkNodeModules('frontend');
 
     // Install if needed
     if (!backendHasModules) {
-      await installDependencies('nestjs-backend', 'Backend');
+      await installDependencies('backend', 'Backend');
     }
 
     if (!frontendHasModules) {
-      await installDependencies('angular-frontend', 'Frontend');
+      await installDependencies('frontend', 'Frontend');
     }
 
     // Check .env file
@@ -98,7 +98,7 @@ async function main() {
     // Start backend
     const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
     const backend = spawn(npm, ['run', 'start:dev'], {
-      cwd: 'nestjs-backend',
+      cwd: 'backend',
       stdio: 'inherit',
       shell: true,
     });
@@ -116,7 +116,7 @@ async function main() {
 
     // Start frontend
     const frontend = spawn(npm, ['start'], {
-      cwd: 'angular-frontend',
+      cwd: 'frontend',
       stdio: 'inherit',
       shell: true,
     });

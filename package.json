@@ -4,16 +4,16 @@
   "description": "SkoolCampus - Complete School Management System",
   "scripts": {
     "start": "node start.js",
-    "start:backend": "cd nestjs-backend && npm run start:dev",
-    "start:frontend": "cd angular-frontend && npm start",
+    "start:backend": "cd backend && npm run start:dev",
+    "start:frontend": "cd frontend && npm start",
     "install:all": "npm run install:backend && npm run install:frontend",
-    "install:backend": "cd nestjs-backend && npm install",
-    "install:frontend": "cd angular-frontend && npm install",
-    "build:all": "npm run build:backend && npm run build:frontend",
-    "build:backend": "cd nestjs-backend && npm run build",
-    "build:frontend": "cd angular-frontend && npm run build",
-    "prisma:generate": "cd nestjs-backend && npm run prisma:generate",
-    "prisma:studio": "cd nestjs-backend && npm run prisma:studio"
+    "install:backend": "cd backend && npm install",
+    "install:frontend": "cd frontend && npm install",
+    "build:all": "npm run backend && npm run build:frontend",
+    "build:backend": "cd backend && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "prisma:generate": "cd backend && npm run prisma:generate",
+    "prisma:studio": "cd backend && npm run prisma:studio"
   },
   "keywords": [
     "school-management",

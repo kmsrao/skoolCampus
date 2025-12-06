@@ -2,11 +2,12 @@ import {
   TimesIcon
 } from "./chunk-E2FQAVPU.js";
 import {
-  animate,
-  style,
-  transition,
-  trigger
-} from "./chunk-TNC24ZJM.js";
+  InputText,
+  InputTextModule
+} from "./chunk-3UIMXCI5.js";
+import {
+  NG_VALUE_ACCESSOR
+} from "./chunk-DJAXFXFY.js";
 import {
   AutoFocus,
   AutoFocusModule
@@ -19,13 +20,6 @@ import {
   DomHandler
 } from "./chunk-JZQAVOZS.js";
 import {
-  InputText,
-  InputTextModule
-} from "./chunk-3UIMXCI5.js";
-import {
-  NG_VALUE_ACCESSOR
-} from "./chunk-DJAXFXFY.js";
-import {
   OverlayService,
   PrimeNGConfig,
   PrimeTemplate,
@@ -36,6 +30,12 @@ import {
   UniqueComponentId,
   zindexutils
 } from "./chunk-CXW4LT6I.js";
+import {
+  animate,
+  style,
+  transition,
+  trigger
+} from "./chunk-TNC24ZJM.js";
 import {
   CommonModule,
   DOCUMENT,
