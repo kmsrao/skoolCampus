@@ -34,6 +34,8 @@ angular-frontend/node_modules/
 /libpeerconnection.log
 testem.log
 /typings
+/dist/
+/frontend/.angular/
 
 # System files
 .DS_Store
@@ -61,8 +63,8 @@ frontend.log
 .frontend.pid
 
 # Build outputs
-nestjs-backend/dist/
-angular-frontend/dist/
+backend/dist/
+frontend/dist/
 
 # Prisma
 nestjs-backend/prisma/migrations/
