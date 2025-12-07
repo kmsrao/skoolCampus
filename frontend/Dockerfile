@@ -1,24 +1,28 @@
-# ---- Build stage ----
-FROM node:20-alpine AS build
+### Stage 1: Build Angular App
+FROM node:18 AS build
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 
 COPY . .
-# If your prod config name is different, adjust below
-RUN npm run build -- --configuration production
 
-# ---- Nginx stage ----
+# ✔ Use correct build command from angular.json :contentReference[oaicite:0]{index=0}
+RUN npm run build 
+
+### Stage 2: Serve with Nginx
 FROM nginx:alpine
 
-# Copy Angular build output
-# ⚠️ Replace "your-angular-project-name" with the actual folder name inside dist
-COPY --from=build /app/dist/your-angular-project-name/ /usr/share/nginx/html
+# Remove default nginx content
+RUN rm -rf /usr/share/nginx/html/*
 
-# Optional: custom nginx config for SPA
+# ✔ Copy correct dist directory from angular.json
+COPY --from=build /app/dist/skoolcampus/browser /usr/share/nginx/html/
+
+# Use custom nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
+
 CMD ["nginx", "-g", "daemon off;"]

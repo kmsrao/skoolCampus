@@ -1,29 +1,51 @@
-# ---- Build stage ----
-FROM node:20-alpine AS build
-
+############################################
+# BASE IMAGE
+############################################
+FROM node:20 AS base
 WORKDIR /app
-
-# Install dependencies
 COPY package*.json ./
+
+############################################
+# BUILD STAGE
+############################################
+FROM base AS build
+
+# Install all dependencies including devDependencies
 RUN npm ci
 
-# Copy source and build
+# Copy Prisma schema
+COPY prisma ./prisma
+
+# Force Prisma to generate Debian-compatible binaries
+ENV PRISMA_CLI_BINARY_TARGETS="debian-openssl-1.1.x"
+
+# Generate Prisma Client
+RUN npx prisma generate
+
+# Copy the rest of the source code
 COPY . .
+
+# Build NestJS application
 RUN npm run build
 
-# ---- Runtime stage ----
-FROM node:20-alpine AS prod
+
+############################################
+# PRODUCTION STAGE
+############################################
+FROM base AS prod
 
 WORKDIR /app
 
-# Only production deps
-COPY package*.json ./
+# Install only production dependencies
 RUN npm ci --omit=dev
 
-# Copy built code from previous stage
+# Copy compiled NestJS output
 COPY --from=build /app/dist ./dist
 
-ENV NODE_ENV=production
+# Copy Prisma Client + Engines
+COPY --from=build /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=build /app/node_modules/.prisma ./node_modules/.prisma
+
 EXPOSE 3000
 
 CMD ["node", "dist/main.js"]

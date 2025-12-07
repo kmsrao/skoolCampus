@@ -4,17 +4,25 @@ services:
   backend:
     build: ./backend
     container_name: skoolcampus-backend
+    restart: always
+    env_file:
+      - ./backend/.env
     ports:
       - "3000:3000"
-    env_file:
-      - ./backend/.env           # optional, if you use .env
-    restart: unless-stopped
+    networks:
+      - skoolcampus-net
 
   frontend:
     build: ./frontend
     container_name: skoolcampus-frontend
+    restart: always
     depends_on:
       - backend
     ports:
       - "80:80"
-    restart: unless-stopped
+    networks:
+      - skoolcampus-net
+
+networks:
+  skoolcampus-net:
+    external: true
