@@ -22,7 +22,7 @@ jobs:
     - name: Deploy to Server via SSH
       run: |
         ssh -i ~/.ssh/deploy_key ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
-          cd /home/kmsrao/skoolcampus &&
+          cd /var/www/skoolcampus/skoolcampus &&
           git pull &&
           docker compose pull &&
           docker compose up -d --build
