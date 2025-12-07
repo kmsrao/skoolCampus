@@ -15,16 +15,12 @@ services:
   frontend:
     build: ./frontend
     container_name: skoolcampus-frontend
-    restart: always
+    restart: always 
     depends_on:
       - backend
     ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      # These are the certs created by certbot on the *host*
-      - /etc/letsencrypt/live/skoolcampus.in/fullchain.pem:/etc/ssl/certs/fullchain.pem:ro
-      - /etc/letsencrypt/live/skoolcampus.in/privkey.pem:/etc/ssl/private/privkey.pem:ro
+      - "8080:80"
+
     networks:
       - skoolcampus-net
 
