@@ -20,6 +20,11 @@ services:
       - backend
     ports:
       - "80:80"
+      - "443:443"
+    volumes:
+      # These are the certs created by certbot on the *host*
+      - /etc/letsencrypt/live/skoolcampus.in/fullchain.pem:/etc/ssl/certs/fullchain.pem:ro
+      - /etc/letsencrypt/live/skoolcampus.in/privkey.pem:/etc/ssl/private/privkey.pem:ro
     networks:
       - skoolcampus-net
 
