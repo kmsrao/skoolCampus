@@ -1,0 +1,165 @@
+<div class="profile-container">
+  <p-toast />
+
+  <div class="profile-header">
+    <h2>My Profile</h2>
+    <p>Manage your profile information and change your password</p>
+  </div>
+
+  <div class="profile-content">
+    <!-- Profile Information Card -->
+    <p-card header="Profile Information" class="profile-card">
+      <form [formGroup]="profileForm" (ngSubmit)="onUpdateProfile()">
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="name">Full Name *</label>
+            <input
+              pInputText
+              id="name"
+              formControlName="name"
+              placeholder="Enter your full name"
+              [class.p-invalid]="
+                profileForm.get('name')?.invalid &&
+                profileForm.get('name')?.dirty
+              "
+            />
+            @if (getFormError('profileForm', 'name')) {
+              <small class="p-error">{{ getFormError('profileForm', 'name') }}</small>
+            }
+          </div>
+
+          <div class="form-field">
+            <label for="email">Email</label>
+            <input
+              pInputText
+              id="email"
+              type="email"
+              formControlName="email"
+              placeholder="Enter your email"
+              [class.p-invalid]="
+                profileForm.get('email')?.invalid &&
+                profileForm.get('email')?.dirty
+              "
+            />
+            @if (getFormError('profileForm', 'email')) {
+              <small class="p-error">{{ getFormError('profileForm', 'email') }}</small>
+            }
+          </div>
+
+          <div class="form-field">
+            <label for="phone">Phone</label>
+            <input
+              pInputText
+              id="phone"
+              formControlName="phone"
+              placeholder="Enter your phone number"
+            />
+          </div>
+
+          <div class="form-field">
+            <label for="address">Address</label>
+            <input
+              pInputText
+              id="address"
+              formControlName="address"
+              placeholder="Enter your address"
+            />
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <p-button
+            label="Update Profile"
+            icon="pi pi-save"
+            type="submit"
+            [loading]="isUpdatingProfile"
+            [disabled]="profileForm.invalid"
+          />
+        </div>
+      </form>
+    </p-card>
+
+    <!-- Change Password Card -->
+    <p-card header="Change Password" class="profile-card">
+      <form [formGroup]="changePasswordForm" (ngSubmit)="onChangePassword()">
+        <div class="form-grid">
+          <div class="form-field full-width">
+            <label for="currentPassword">Current Password *</label>
+            <p-password
+              formControlName="currentPassword"
+              inputId="currentPassword"
+              placeholder="Enter current password"
+              [toggleMask]="true"
+              [feedback]="false"
+              styleClass="w-full"
+              [inputStyle]="{ width: '100%' }"
+              [class.p-invalid]="
+                changePasswordForm.get('currentPassword')?.invalid &&
+                changePasswordForm.get('currentPassword')?.dirty
+              "
+            />
+            @if (getFormError('changePasswordForm', 'currentPassword')) {
+              <small class="p-error">{{
+                getFormError('changePasswordForm', 'currentPassword')
+              }}</small>
+            }
+          </div>
+
+          <div class="form-field">
+            <label for="newPassword">New Password *</label>
+            <p-password
+              formControlName="newPassword"
+              inputId="newPassword"
+              placeholder="Enter new password"
+              [toggleMask]="true"
+              [feedback]="true"
+              styleClass="w-full"
+              [inputStyle]="{ width: '100%' }"
+              [class.p-invalid]="
+                changePasswordForm.get('newPassword')?.invalid &&
+                changePasswordForm.get('newPassword')?.dirty
+              "
+            />
+            @if (getFormError('changePasswordForm', 'newPassword')) {
+              <small class="p-error">{{
+                getFormError('changePasswordForm', 'newPassword')
+              }}</small>
+            }
+          </div>
+
+          <div class="form-field">
+            <label for="confirmPassword">Confirm New Password *</label>
+            <p-password
+              formControlName="confirmPassword"
+              inputId="confirmPassword"
+              placeholder="Confirm new password"
+              [toggleMask]="true"
+              [feedback]="false"
+              styleClass="w-full"
+              [inputStyle]="{ width: '100%' }"
+              [class.p-invalid]="
+                changePasswordForm.get('confirmPassword')?.invalid &&
+                changePasswordForm.get('confirmPassword')?.dirty
+              "
+            />
+            @if (getFormError('changePasswordForm', 'confirmPassword')) {
+              <small class="p-error">{{
+                getFormError('changePasswordForm', 'confirmPassword')
+              }}</small>
+            }
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <p-button
+            label="Change Password"
+            icon="pi pi-key"
+            type="submit"
+            [loading]="isChangingPassword"
+            [disabled]="changePasswordForm.invalid"
+          />
+        </div>
+      </form>
+    </p-card>
+  </div>
+</div>

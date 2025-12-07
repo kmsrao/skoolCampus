@@ -1,0 +1,115 @@
+.profile-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .profile-header {
+    margin-bottom: 2rem;
+
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      color: #666;
+      font-size: 1rem;
+    }
+  }
+
+  .profile-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    .profile-card {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+      ::ng-deep .p-card-header {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #333;
+        padding: 1.5rem 1.5rem 1rem;
+      }
+
+      ::ng-deep .p-card-body {
+        padding: 1.5rem;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+
+        .form-field {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+
+          &.full-width {
+            grid-column: 1 / -1;
+          }
+
+          label {
+            font-weight: 500;
+            color: #333;
+            font-size: 0.95rem;
+          }
+
+          input,
+          ::ng-deep .p-password {
+            width: 100%;
+          }
+
+          ::ng-deep .p-password input {
+            width: 100%;
+          }
+
+          small.p-error {
+            color: #ef4444;
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+          }
+        }
+      }
+
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        padding-top: 1rem;
+        border-top: 1px solid #e5e7eb;
+
+        ::ng-deep .p-button {
+          padding: 0.75rem 1.5rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 1rem;
+
+    .profile-header {
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      p {
+        font-size: 0.9rem;
+      }
+    }
+
+    .profile-content {
+      .profile-card {
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    }
+  }
+}

@@ -34,6 +34,12 @@ export class LayoutComponent {
         route: '/dashboard',
         visible: true,
       },
+      {
+        label: 'Profile',
+        icon: 'pi pi-user',
+        route: '/profile',
+        visible: true,
+      },
     ];
 
     // Add role-specific menu items
